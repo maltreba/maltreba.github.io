@@ -20,6 +20,10 @@
     --accent:#6cc3d5; --accent-2:#e0b05f; --chip:#1d2a30;
   }
 }
+:root[data-theme="dark"]{
+  --bg:#0f1318; --card:#171c24; --ink:#e8e9ec; --muted:#9aa3b2; --line:#262d38;
+  --accent:#6cc3d5; --accent-2:#e0b05f; --chip:#1d2a30;
+}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--ink);font:400 16px/1.65 var(--sans);-webkit-font-smoothing:antialiased}
@@ -68,8 +72,63 @@ h2.title::after{content:"";flex:1;height:1px;background:var(--line)}
 /* Awards */
 .award{border-left:3px solid var(--accent-2);padding-left:16px;margin-bottom:22px}
 .award:last-child{margin-bottom:0}
-.award h3{font-size:1.05rem;font-weight:600}
+.award h3{font-size:1.05rem;font-weight:600;display:inline}
+.award>summary{cursor:pointer;margin-bottom:6px}
+.award>summary:hover h3{color:var(--accent)}
 .award .org{font-weight:400;color:var(--muted)}
+
+/* Progress bar */
+#progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--accent-2);z-index:60;transition:width .1s linear}
+
+/* Sticky nav */
+.nav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:6px;overflow-x:auto;scrollbar-width:none;padding-top:8px;padding-bottom:8px}
+.nav .wrap::-webkit-scrollbar{display:none}
+.nav a{white-space:nowrap;padding:7px 14px;border-radius:999px;font-size:.88rem;font-weight:500;color:var(--muted);transition:.2s}
+.nav a:hover{color:var(--accent);background:var(--chip);text-decoration:none}
+.nav a.active{color:#fff;background:var(--accent)}
+:root[data-theme="dark"] .nav a.active{color:#0f1318}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .nav a.active{color:#0f1318}}
+.nav .spacer{flex:1}
+.icon-btn{flex:none;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;transition:.2s}
+.icon-btn:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
+.icon-btn svg{width:17px;height:17px}
+section{scroll-margin-top:68px}
+
+/* Reveal on scroll */
+.js .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.js .reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+
+/* Collapsible items */
+details.item>summary{list-style:none;cursor:pointer;position:relative;padding-right:30px;border-radius:8px}
+details.item>summary::-webkit-details-marker{display:none}
+details.item>summary::after{content:"";position:absolute;right:6px;top:8px;width:8px;height:8px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);transition:transform .25s}
+details.item[open]>summary::after{transform:rotate(-135deg);top:12px}
+details.item>summary:hover h3{color:var(--accent)}
+details.item>summary:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+details.item .body{padding-top:4px;animation:fade .3s ease}
+@keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.tools{display:flex;gap:8px;margin:-6px 0 18px}
+.tools button{font:500 .82rem var(--sans);padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;transition:.2s}
+.tools button:hover{color:var(--accent);border-color:var(--accent)}
+
+/* Chips interactive */
+.chips li{transition:.2s;cursor:default}
+.chips li:hover{background:var(--accent);color:#fff;transform:translateY(-2px)}
+:root[data-theme="dark"] .chips li:hover{color:#0f1318}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .chips li:hover{color:#0f1318}}
+
+/* Contact buttons */
+.contacts button{font:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.12);color:#fff;font-size:.9rem;border:1px solid rgba(255,255,255,.18)}
+.contacts button:hover{background:rgba(255,255,255,.22)}
+.contacts button svg{width:16px;height:16px}
+
+/* Toast + back to top */
+#toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:.88rem;opacity:0;pointer-events:none;transition:.3s;z-index:70}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#top{position:fixed;right:20px;bottom:24px;opacity:0;pointer-events:none;transition:.3s;box-shadow:0 4px 14px rgba(0,0,0,.15)}
+#top.show{opacity:1;pointer-events:auto}
 
 footer{text-align:center;color:var(--muted);font-size:.82rem;padding:0 20px 40px}
 
@@ -79,6 +138,9 @@ footer{text-align:center;color:var(--muted);font-size:.82rem;padding:0 20px 40px
 }
 @media print{
   body{background:#fff}
+  .nav,#progress,#top,#toast,.tools{display:none!important}
+  .js .reveal{opacity:1!important;transform:none!important}
+  details.item>summary::after{display:none}
   .hero{background:#0f4c5c!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   section{box-shadow:none;break-inside:avoid}
   main{margin-top:0}
@@ -95,51 +157,63 @@ footer{text-align:center;color:var(--muted);font-size:.82rem;padding:0 20px 40px
     <div class="contacts">
       <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Jakarta, Indonesia</span>
       <a href="mailto:maltreba@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>maltreba@gmail.com</a>
+      <button type="button" id="copy" aria-label="Copy email address"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg>Copy email</button>
       <a href="tel:+628118460811"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.4c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg>0811 846 0811</a>
       <a href="https://www.linkedin.com/in/maltreba" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 9.75h4V21H3zM9.5 9.75h3.8v1.6h.05c.53-1 1.82-2 3.75-2 4 0 4.75 2.6 4.75 6V21h-4v-4.9c0-1.2 0-2.7-1.7-2.7s-1.9 1.3-1.9 2.6V21h-4z"/></svg>linkedin.com/in/maltreba</a>
     </div>
   </div>
 </header>
 
+<nav class="nav" aria-label="Sections">
+  <div class="wrap">
+    <a href="#summary">Summary</a><a href="#experience">Experience</a><a href="#education">Education</a><a href="#certifications">Certifications</a><a href="#skills">Skills</a><a href="#awards">Awards</a>
+    <span class="spacer"></span>
+    <button class="icon-btn" id="print" title="Print / save as PDF" aria-label="Print or save as PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></button>
+    <button class="icon-btn" id="theme" title="Toggle dark mode" aria-label="Toggle dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg></button>
+  </div>
+</nav>
+<div id="progress"></div>
+
 <main class="wrap">
 
-  <section>
+  <section id="summary" class="reveal">
     <h2 class="title">Summary</h2>
     <p class="lead">Experienced Auditor with a demonstrated history of working in the financial services industry especially in Public Finance. Skilled in Business Process, Cash Flow, Enterprise Risk Management, Analytical Skills, and Databases. Strong accounting professional with a Bachelor Degree in Accounting from University of Indonesia and a Master's Degree focused in Public Finance from Rutgers, The State University of New Jersey-Newark.</p>
   </section>
 
-  <section>
+  <section id="experience" class="reveal">
     <h2 class="title">Experience</h2>
+    <div class="tools"><button type="button" data-expand="open">Expand all</button><button type="button" data-expand="close">Collapse all</button></div>
     <div class="tl">
-      <div class="item current">
-        <h3>Senior Auditor</h3>
+      <details class="item current" open>
+        <summary><h3>Senior Auditor</h3>
         <div class="org">Badan Pemeriksa Keuangan Republik Indonesia</div>
-        <span class="date">Feb 2011 – Present</span>
-        <p>My responsibility as an auditor is to perform audit in government institutions. There are three types of audits that I have done, namely financial statement audits, performance audits and audits with a specific purpose. Some of my clients are Ministry of Finance of The Republic of Indonesia, LPDP, Cites and Regencies Government in Papua Province.</p>
-        <p>Apart from being a full-time auditor, I have also been trusted as a member of the central government financial statement audit working group and a team member of the big data analytics laboratory.</p>
-      </div>
+        <span class="date">Feb 2011 – Present</span></summary>
+        <div class="body"><p>My responsibility as an auditor is to perform audit in government institutions. There are three types of audits that I have done, namely financial statement audits, performance audits and audits with a specific purpose. Some of my clients are Ministry of Finance of The Republic of Indonesia, LPDP, Cites and Regencies Government in Papua Province.</p>
+        <p>Apart from being a full-time auditor, I have also been trusted as a member of the central government financial statement audit working group and a team member of the big data analytics laboratory.</p></div>
+      </details>
       <div class="item">
         <h3>Legal and Public Relation Staff</h3>
         <div class="org">Badan Pemeriksa Keuangan Republik Indonesia</div>
         <span class="date">May 2009 – Apr 2011 · 2 years</span>
       </div>
-      <div class="item">
-        <h3>Supply Chain Analyst</h3>
+      <details class="item" open>
+        <summary><h3>Supply Chain Analyst</h3>
         <div class="org">PT HM Sampoerna Tbk.</div>
-        <span class="date">Feb 2009 – Apr 2009 · 3 months</span>
-        <p>Coordinate all supply chain application and generate report for supply chain department, including PT Handal Logistik Nusantara</p>
-      </div>
-      <div class="item">
-        <h3>Logistics System Analyst</h3>
+        <span class="date">Feb 2009 – Apr 2009 · 3 months</span></summary>
+        <div class="body"><p>Coordinate all supply chain application and generate report for supply chain department, including PT Handal Logistik Nusantara</p></div>
+      </details>
+      <details class="item" open>
+        <summary><h3>Logistics System Analyst</h3>
         <div class="org">PT HM Sampoerna Tbk.</div>
-        <span class="date">Jun 2008 – Jan 2009 · 8 months</span>
-        <p>Maintain Transport Order Management Web Application used by entire Handal Logistik Employee. Generate Monthly Report submitted to Handal Logistik General Manager, especially for Transport Performance.</p>
-        <p>Analyze Transport and Warehouse Performance for Any Possible Improvement.</p>
-      </div>
+        <span class="date">Jun 2008 – Jan 2009 · 8 months</span></summary>
+        <div class="body"><p>Maintain Transport Order Management Web Application used by entire Handal Logistik Employee. Generate Monthly Report submitted to Handal Logistik General Manager, especially for Transport Performance.</p>
+        <p>Analyze Transport and Warehouse Performance for Any Possible Improvement.</p></div>
+      </details>
     </div>
   </section>
 
-  <section>
+  <section id="education" class="reveal">
     <h2 class="title">Education</h2>
     <div class="tl">
       <div class="item">
@@ -160,7 +234,7 @@ footer{text-align:center;color:var(--muted);font-size:.82rem;padding:0 20px 40px
     </div>
   </section>
 
-  <section>
+  <section id="certifications" class="reveal">
     <h2 class="title">Licenses &amp; Certifications</h2>
     <div class="tl">
       <div class="item">
@@ -175,31 +249,90 @@ footer{text-align:center;color:var(--muted);font-size:.82rem;padding:0 20px 40px
     </div>
   </section>
 
-  <section>
+  <section id="skills" class="reveal">
     <h2 class="title">Skills</h2>
     <ul class="chips">
       <li>Government Accounting</li><li>Public Financial Management</li><li>Regulatory Compliance</li><li>Databases</li><li>Auditing</li><li>External Audit</li><li>Financial Audits</li><li>Accounting</li><li>Financial Accounting</li><li>Internal Controls</li>
     </ul>
   </section>
 
-  <section>
+  <section id="awards" class="reveal">
     <h2 class="title">Honors &amp; Awards</h2>
-    <div class="award">
-      <h3>Pi Alpha Alpha <span class="org">– Network of Schools of Public Policy, Affairs, and Administration</span></h3>
-      <span class="date">May 2016</span>
+    <details class="award item-aw" open>
+      <summary><h3>Pi Alpha Alpha <span class="org">– Network of Schools of Public Policy, Affairs, and Administration</span></h3>
+      <span class="date">May 2016</span></summary>
       <p style="color:var(--muted);font-size:.95rem">Pi Alpha Alpha is the Global Honor Society for Public Affairs and Administration. There are more than 160 chapters located around the world at NASPAA member schools. Pi Alpha Alpha is run by NASPAA: The Global Standard in Public Service Education and is directed by the NASPAA Pi Alpha Alpha Special Ad Hoc Committee (Committee)</p>
-    </div>
-    <div class="award">
-      <h3>E. Drexel Godfrey Memorial Award <span class="org">– School of Public Affairs and Administration (SPAA) Rutgers</span></h3>
-      <span class="date">May 2016</span>
+    </details>
+    <details class="award item-aw" open>
+      <summary><h3>E. Drexel Godfrey Memorial Award <span class="org">– School of Public Affairs and Administration (SPAA) Rutgers</span></h3>
+      <span class="date">May 2016</span></summary>
       <p style="color:var(--muted);font-size:.95rem">This award is among the most prestigious awards given to our students who are nominated by the faculty for outstanding scholarship and public service and is named for Professor Drexel Godfrey who enjoyed a long and distinguished career in government service (as a highly placed CIA official) and as academic faculty at Rutgers Newark. Professor Drexel was also an acclaimed author of books on ethics and intelligence, a Woodrow Wilson Fellow, a Fulbright Scholar, and an influential opinion leader among government and business leaders.</p>
       <p style="color:var(--muted);font-size:.95rem;margin-top:10px">Most importantly, Professor Godfrey was the architect of the University’s graduate program in public administration, the most distinguished being our Graduate School in Newark where he was most effective in obtaining grant support for program development and fellowships.</p>
-    </div>
+    </details>
   </section>
 
 </main>
 
 <footer>© Maltreba Kispatelo</footer>
+
+<button class="icon-btn" id="top" aria-label="Back to top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  var root=document.documentElement, $=function(s,c){return (c||document).querySelector(s)}, $$=function(s,c){return Array.prototype.slice.call((c||document).querySelectorAll(s))};
+  root.classList.add('js');
+
+  /* Theme toggle (remembered per browser) */
+  try{var saved=localStorage.getItem('theme'); if(saved) root.setAttribute('data-theme',saved);}catch(e){}
+  $('#theme').addEventListener('click',function(){
+    var dark=root.getAttribute('data-theme')==='dark' || (!root.getAttribute('data-theme') && matchMedia('(prefers-color-scheme: dark)').matches);
+    var next=dark?'light':'dark'; root.setAttribute('data-theme',next);
+    try{localStorage.setItem('theme',next)}catch(e){}
+  });
+
+  /* Toast */
+  var toast=$('#toast'),tt;
+  function say(m){toast.textContent=m;toast.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){toast.classList.remove('show')},2000)}
+
+  /* Copy email */
+  $('#copy').addEventListener('click',function(){
+    var t='maltreba@gmail.com';
+    if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){say('Email copied')},function(){say(t)})}else{say(t)}
+  });
+
+  /* Print / PDF */
+  $('#print').addEventListener('click',function(){window.print()});
+  window.addEventListener('beforeprint',function(){$$('details').forEach(function(d){d.setAttribute('data-was',d.open?'1':'0');d.open=true})});
+  window.addEventListener('afterprint',function(){$$('details').forEach(function(d){d.open=d.getAttribute('data-was')==='1'})});
+
+  /* Expand / collapse all */
+  $$('[data-expand]').forEach(function(b){b.addEventListener('click',function(){
+    var o=b.getAttribute('data-expand')==='open'; $$('#experience details').forEach(function(d){d.open=o});
+  })});
+
+  /* Reveal on scroll */
+  var secs=$$('.reveal');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.08});
+    secs.forEach(function(s){io.observe(s)});
+  }else secs.forEach(function(s){s.classList.add('in')});
+
+  /* Scroll spy, progress bar, back-to-top */
+  var links=$$('.nav a'), bar=$('#progress'), top=$('#top');
+  var targets=links.map(function(a){return $(a.getAttribute('href'))});
+  function onScroll(){
+    var h=document.documentElement, max=h.scrollHeight-innerHeight, y=scrollY;
+    bar.style.width=(max>0?y/max*100:0)+'%';
+    top.classList.toggle('show',y>600);
+    var cur=0; targets.forEach(function(t,i){if(t && t.getBoundingClientRect().top<140) cur=i});
+    if(max-y<4) cur=targets.length-1;
+    links.forEach(function(a,i){a.classList.toggle('active',i===cur && y>200)});
+  }
+  addEventListener('scroll',onScroll,{passive:true}); addEventListener('resize',onScroll); onScroll();
+  top.addEventListener('click',function(){scrollTo({top:0,behavior:'smooth'})});
+})();
+</script>
 
 </body>
 </html>
