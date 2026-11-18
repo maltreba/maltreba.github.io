@@ -73,7 +73,11 @@ h2.title::after{content:"";flex:1;height:1px;background:var(--line)}
 .award{border-left:3px solid var(--accent-2);padding-left:16px;margin-bottom:22px}
 .award:last-child{margin-bottom:0}
 .award h3{font-size:1.05rem;font-weight:600;display:inline}
-.award>summary{cursor:pointer;margin-bottom:6px}
+.award>summary{cursor:pointer;margin-bottom:6px;list-style:none;position:relative;padding-right:28px}
+.award>summary::-webkit-details-marker{display:none}
+.award>summary::after{content:"";position:absolute;right:6px;top:8px;width:8px;height:8px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);transition:transform .25s}
+.award[open]>summary::after{transform:rotate(-135deg);top:12px}
+.award>summary .date{display:block}
 .award>summary:hover h3{color:var(--accent)}
 .award .org{font-weight:400;color:var(--muted)}
 
@@ -130,6 +134,23 @@ details.item .body{padding-top:4px;animation:fade .3s ease}
 #top{position:fixed;right:20px;bottom:24px;opacity:0;pointer-events:none;transition:.3s;box-shadow:0 4px 14px rgba(0,0,0,.15)}
 #top.show{opacity:1;pointer-events:auto}
 
+/* SVG art */
+.hero-art{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.hero-art .grid path{stroke:rgba(255,255,255,.07);stroke-width:1}
+.hero-art .line{fill:none;stroke:#e8c98d;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1400;stroke-dashoffset:1400;animation:draw 2.6s .3s ease forwards}
+.hero-art .area{fill:url(#areaGrad);opacity:0;animation:fadein 1.2s 1.8s ease forwards}
+.hero-art .dot{fill:#0f4c5c;stroke:#e8c98d;stroke-width:2.5;opacity:0;animation:fadein .5s ease forwards}
+.hero-art .bars rect{fill:rgba(255,255,255,.08);transform-box:fill-box;transform-origin:bottom;animation:grow 1s ease backwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fadein{to{opacity:1}}
+@keyframes grow{from{transform:scaleY(0)}}
+.wave{position:absolute;left:0;right:0;bottom:-1px;width:100%;height:56px;display:block;z-index:1}
+.wave path{fill:var(--bg)}
+h2.title .ti{width:24px;height:24px;flex:none;padding:4px;box-sizing:content-box;border-radius:10px;background:var(--chip);color:var(--accent)}
+.ti-sm{display:inline-block;vertical-align:-3px;width:18px;height:18px;margin-right:8px;color:var(--accent-2)}
+@media (prefers-reduced-motion:reduce){.hero-art .line,.hero-art .area,.hero-art .dot,.hero-art .bars rect{animation:none;stroke-dashoffset:0;opacity:1}}
+@media (max-width:600px){.hero-art{opacity:.55}}
+
 footer{text-align:center;color:var(--muted);font-size:.82rem;padding:0 20px 40px}
 
 @media (max-width:600px){
@@ -150,6 +171,23 @@ footer{text-align:center;color:var(--muted);font-size:.82rem;padding:0 20px 40px
 <body>
 
 <header class="hero">
+  <svg class="hero-art" viewBox="0 0 1200 420" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8c98d" stop-opacity=".35"/><stop offset="1" stop-color="#e8c98d" stop-opacity="0"/></linearGradient>
+      <pattern id="gp" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M60 0H0V60" fill="none" stroke="rgba(255,255,255,.07)"/></pattern>
+    </defs>
+    <rect width="1200" height="420" fill="url(#gp)"/>
+    <g class="bars">
+      <rect x="640" y="250" width="34" height="170" style="animation-delay:.2s"/><rect x="700" y="210" width="34" height="210" style="animation-delay:.3s"/>
+      <rect x="760" y="270" width="34" height="150" style="animation-delay:.4s"/><rect x="820" y="180" width="34" height="240" style="animation-delay:.5s"/>
+      <rect x="880" y="225" width="34" height="195" style="animation-delay:.6s"/><rect x="940" y="140" width="34" height="280" style="animation-delay:.7s"/>
+      <rect x="1000" y="190" width="34" height="230" style="animation-delay:.8s"/><rect x="1060" y="100" width="34" height="320" style="animation-delay:.9s"/>
+    </g>
+    <path class="area" d="M600 330 L700 290 L790 310 L880 220 L970 250 L1060 150 L1160 90 L1160 420 L600 420Z"/>
+    <path class="line" d="M600 330 L700 290 L790 310 L880 220 L970 250 L1060 150 L1160 90"/>
+    <g><circle class="dot" cx="700" cy="290" r="6" style="animation-delay:1s"/><circle class="dot" cx="880" cy="220" r="6" style="animation-delay:1.5s"/><circle class="dot" cx="1060" cy="150" r="6" style="animation-delay:2s"/><circle class="dot" cx="1160" cy="90" r="6" style="animation-delay:2.6s"/></g>
+  </svg>
+  <svg class="wave" viewBox="0 0 1200 56" preserveAspectRatio="none" aria-hidden="true"><path d="M0 56V30C150 6 300 6 450 24s300 30 450 12 210-24 300-8V56Z"/></svg>
   <div class="wrap">
     <div class="eyebrow">Auditor · Public Finance · Data Analytics</div>
     <h1>Maltreba Kispatelo</h1>
@@ -177,12 +215,12 @@ footer{text-align:center;color:var(--muted);font-size:.82rem;padding:0 20px 40px
 <main class="wrap">
 
   <section id="summary" class="reveal">
-    <h2 class="title">Summary</h2>
+    <h2 class="title"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>Summary</h2>
     <p class="lead">Experienced Auditor with a demonstrated history of working in the financial services industry especially in Public Finance. Skilled in Business Process, Cash Flow, Enterprise Risk Management, Analytical Skills, and Databases. Strong accounting professional with a Bachelor Degree in Accounting from University of Indonesia and a Master's Degree focused in Public Finance from Rutgers, The State University of New Jersey-Newark.</p>
   </section>
 
   <section id="experience" class="reveal">
-    <h2 class="title">Experience</h2>
+    <h2 class="title"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2M3 13h18"/></svg>Experience</h2>
     <div class="tools"><button type="button" data-expand="open">Expand all</button><button type="button" data-expand="close">Collapse all</button></div>
     <div class="tl">
       <details class="item current" open>
@@ -214,7 +252,7 @@ footer{text-align:center;color:var(--muted);font-size:.82rem;padding:0 20px 40px
   </section>
 
   <section id="education" class="reveal">
-    <h2 class="title">Education</h2>
+    <h2 class="title"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 9L12 4 2 9l10 5 10-5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.500 6-3v-5M22 9v6"/></svg>Education</h2>
     <div class="tl">
       <div class="item">
         <h3>Rutgers University – Newark</h3>
@@ -235,7 +273,7 @@ footer{text-align:center;color:var(--muted);font-size:.82rem;padding:0 20px 40px
   </section>
 
   <section id="certifications" class="reveal">
-    <h2 class="title">Licenses &amp; Certifications</h2>
+    <h2 class="title"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v6c0 4.500-3 7.500-7 9-4-1.500-7-4.500-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>Licenses &amp; Certifications</h2>
     <div class="tl">
       <div class="item">
         <h3>Certified Information Systems Auditor® (CISA)</h3>
@@ -250,21 +288,21 @@ footer{text-align:center;color:var(--muted);font-size:.82rem;padding:0 20px 40px
   </section>
 
   <section id="skills" class="reveal">
-    <h2 class="title">Skills</h2>
+    <h2 class="title"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.800 5.200L19 10l-5.200 1.800L12 17l-1.800-5.200L5 10l5.200-1.800L12 3zM19 16l.8 2.200L22 19l-2.200.8L19 22l-.8-2.200L16 19l2.200-.8L19 16z"/></svg>Skills</h2>
     <ul class="chips">
       <li>Government Accounting</li><li>Public Financial Management</li><li>Regulatory Compliance</li><li>Databases</li><li>Auditing</li><li>External Audit</li><li>Financial Audits</li><li>Accounting</li><li>Financial Accounting</li><li>Internal Controls</li>
     </ul>
   </section>
 
   <section id="awards" class="reveal">
-    <h2 class="title">Honors &amp; Awards</h2>
+    <h2 class="title"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.500 14L7 22l5-3 5 3-1.500-8"/></svg>Honors &amp; Awards</h2>
     <details class="award item-aw" open>
-      <summary><h3>Pi Alpha Alpha <span class="org">– Network of Schools of Public Policy, Affairs, and Administration</span></h3>
+      <summary><h3><svg class="ti-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 14L7 22l5-3 5 3-1.5-8"/></svg>Pi Alpha Alpha <span class="org">– Network of Schools of Public Policy, Affairs, and Administration</span></h3>
       <span class="date">May 2016</span></summary>
       <p style="color:var(--muted);font-size:.95rem">Pi Alpha Alpha is the Global Honor Society for Public Affairs and Administration. There are more than 160 chapters located around the world at NASPAA member schools. Pi Alpha Alpha is run by NASPAA: The Global Standard in Public Service Education and is directed by the NASPAA Pi Alpha Alpha Special Ad Hoc Committee (Committee)</p>
     </details>
     <details class="award item-aw" open>
-      <summary><h3>E. Drexel Godfrey Memorial Award <span class="org">– School of Public Affairs and Administration (SPAA) Rutgers</span></h3>
+      <summary><h3><svg class="ti-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 14L7 22l5-3 5 3-1.5-8"/></svg>E. Drexel Godfrey Memorial Award <span class="org">– School of Public Affairs and Administration (SPAA) Rutgers</span></h3>
       <span class="date">May 2016</span></summary>
       <p style="color:var(--muted);font-size:.95rem">This award is among the most prestigious awards given to our students who are nominated by the faculty for outstanding scholarship and public service and is named for Professor Drexel Godfrey who enjoyed a long and distinguished career in government service (as a highly placed CIA official) and as academic faculty at Rutgers Newark. Professor Drexel was also an acclaimed author of books on ethics and intelligence, a Woodrow Wilson Fellow, a Fulbright Scholar, and an influential opinion leader among government and business leaders.</p>
       <p style="color:var(--muted);font-size:.95rem;margin-top:10px">Most importantly, Professor Godfrey was the architect of the University’s graduate program in public administration, the most distinguished being our Graduate School in Newark where he was most effective in obtaining grant support for program development and fellowships.</p>
